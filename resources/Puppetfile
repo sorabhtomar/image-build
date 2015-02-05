@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+forge "https://forgeapi.puppetlabs.com"
+
+mod 'puppetlabs/apt'
+mod 'puppetlabs/gcc'
+mod 'puppetlabs/ntp'
+mod 'puppetlabs/stdlib'
+mod 'maestrodev/rvm'

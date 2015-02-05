@@ -1,0 +1,71 @@
+#!/bin/bash
+
+set -vx
+abort () {
+    errcode=$?
+    echo "Error on line ${BASH_LINENO[0]}: $BASH_COMMAND"
+    exit $errcode
+}
+trap abort ERR
+
+# unofficial bash strict mode (edsymbol.net/articles/unofficial-bash-strict-mode/)
+set -o errexit -o nounset -o pipefail
+
+STARTING_DIR=$PWD
+
+git remote update
+
+export SERVICE_NAME="`cat SERVICE_NAME`"
+export GIT_BRANCH=$(git symbolic-ref -q HEAD)
+export GIT_BRANCH=${GIT_BRANCH##refs/heads/}
+export LOCAL_BRANCH_REF="`git show-ref | grep -E heads/$GIT_BRANCH\$| awk '{print $1}'`"
+
+if [ -z "$GIT_BRANCH" ]; then
+    echo "Cowardly refusing to deploy a detached HEAD"
+    exit 1
+else
+    GIT_BRANCH=${GIT_BRANCH##refs/heads/}
+fi
+
+function clean_up_tmp() {
+    # don't want strict mode inside cleanup!
+    set +euo pipefail
+    cp *.box $STARTING_DIR
+    cd $STARTING_DIR
+    git reset --hard HEAD
+    git clean -ffxd
+    rm -rf $TEMP_DIR
+}
+
+TEMP_DIR=$(mktemp -d -t $SERVICE_NAME.XXXXX)
+
+trap clean_up_tmp EXIT
+
+git archive --format tar $LOCAL_BRANCH_REF > $TEMP_DIR/$SERVICE_NAME.tar
+
+cp -a $STARTING_DIR/* $TEMP_DIR
+cd $TEMP_DIR
+ls -l
+
+if [ -e './Puppetfile' ]; then
+    echo "Found Puppetfile, attempting to fetch modules."
+    if [ -z "`which librarian-puppet||true`" ]; then
+        echo "Cowardly refusing to build project which uses librarian when librarian is not on the path."
+        exit 1
+    else
+        bundle install
+        librarian-puppet install
+        echo "Fetched modules."
+    fi
+fi
+
+if [ -e "./$SERVICE_NAME.json" ]; then
+    echo "Found $SERVICE_NAME.json, using it for packer file."
+    export PACKER_FILE="$SERVICE_NAME.json"
+else
+    echo "Found default.json, using it as the packer file."
+    export PACKER_FILE="default.json"
+fi
+
+PACKER_GIT_BRANCH=$GIT_BRANCH PACKER_GIT_SHA=$LOCAL_BRANCH_REF packer build $PACKER_FILE
+

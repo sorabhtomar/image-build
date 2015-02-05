@@ -27,3 +27,7 @@
     (is (false? (boolean (should-we-use-package-lists? ["requirements.txt" "default.pp"]))))
     (is (false? (boolean (should-we-use-package-lists? ["packages.json" "default.json"]))))
     (is (false? (boolean (should-we-use-package-lists? ["Gemfile" "default.json"]))))))
+
+(deftest project-files-test
+  (testing "doesn't fail when given a nil path"
+    (is (project-files nil))))
