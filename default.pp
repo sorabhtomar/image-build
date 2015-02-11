@@ -8,6 +8,7 @@ class build_dir {
 
 class leiningen {
   include build_dir
+  include apt
 
   package {['git', 'openjdk-7-jdk']: }
 
