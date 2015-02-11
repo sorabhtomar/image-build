@@ -37,7 +37,7 @@ class image_build {
   class {'packer': }
 
   package {
-    'librarian':
+    'librarian-puppet':
       provider => 'gem',
       ensure   => present,
       require  => Package['ruby-dev'];
