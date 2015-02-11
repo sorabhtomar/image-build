@@ -12,7 +12,7 @@ class leiningen {
   package {'git': }
 
   vcsrepo {'/build/leiningen':
-    source => 'git@github.com:technomancy/leiningen.git',
+    source => 'https://github.com/technomancy/leiningen.git',
     provider => 'git',
     revision => '2.5.1',
     require  => Package['git'],
