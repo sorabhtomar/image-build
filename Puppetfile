@@ -2,5 +2,5 @@
 
 forge "https://forgeapi.puppetlabs.com"
 
-mod 'puppetlabs/apt'
+mod 'counsyl/packer'
 mod 'puppetlabs/vcsrepo'

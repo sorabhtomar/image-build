@@ -33,4 +33,4 @@ class leiningen {
   }
 }
 
-class {'leiningen': }
+class {'leiningen': } -> class {'packer': }
