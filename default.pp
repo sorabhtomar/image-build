@@ -41,7 +41,12 @@ class image_build {
       provider => 'gem',
       ensure   => present,
       require  => Package['ruby-dev'];
-    ['ruby-dev', 'virtualbox']:;
+    ['ruby-dev', 'virtualbox', 'vagrant']:;
+    # vagrant needed for getting our base image in place, at least for now. this should be
+    # abstracted out into a separate system later, probably.
+    # the base image can be fetched with this command:
+    #
+    # vagrant box add udacity/puppet-masterless https://atlas.hashicorp.com/udacity/boxes/puppet-masterless/versions/0.0.1/providers/virtualbox.box
   }
 }
 
