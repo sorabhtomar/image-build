@@ -8,7 +8,8 @@ class build_dir {
 
 class leiningen {
   include build_dir
-  include apt
+
+  class {'apt': }
 
   package {['git', 'openjdk-7-jdk']:
     require => Class['apt'],
