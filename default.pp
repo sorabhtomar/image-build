@@ -19,7 +19,7 @@ class leiningen {
     source => '/build/leiningen/bin/lein',
     owner  => 'root',
     group  => 'root',
-    mode   => 'ugo+rx, u+w',
+    mode   => 'a=rx,u=w',
     require => Vcsrepo['/build/leiningen'],
   }
 }
