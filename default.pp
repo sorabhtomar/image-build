@@ -9,10 +9,12 @@ class build_dir {
 class leiningen {
   include build_dir
 
-  class {'apt': }
+  exec {'apt-update':
+    command => "/usr/bin/apt-get update -qy",
+  }
 
   package {['git', 'openjdk-7-jdk']:
-    require => Class['apt'],
+    require => Exec['apt-update'],
   }
 
   vcsrepo {'/build/leiningen':
