@@ -36,9 +36,18 @@ class leiningen {
 class image_build {
   class {'packer': }
 
-  exec {'fetch vagrant':
-    command => '/usr/bin/wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb',
-    cwd     => '/build',
+  Exec {
+    path => '/usr/bin',
+    cwd  => '/build',
+  }
+  exec {
+    'fetch vagrant':
+      command => 'wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb';
+    'fetch virtualbox':
+      command => 'wget http://download.virtualbox.org/virtualbox/4.3.20/virtualbox-4.3_4.3.20-96996~Ubuntu~raring_amd64.deb',
+      before  => Exec['do final apt-get install'];
+    'do final apt-get install':
+      command => 'apt-get install -f';
   }
 
   package {
@@ -47,6 +56,10 @@ class image_build {
       ensure   => present,
       require  => Package['ruby-dev'];
     ['ruby-dev', 'virtualbox']:;
+    'virtualbox':
+      provider => 'dpkg',
+      source   => '/build/virtualbox-4.3_4.3.20-96996~Ubuntu~raring_amd64.deb',
+      require  => Exec['fetch virtualbox'];
     'vagrant':
       provider => 'dpkg',
       source   => '/build/vagrant_1.7.2_x86_64.deb',
