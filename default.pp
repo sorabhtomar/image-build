@@ -23,3 +23,5 @@ class leiningen {
     require => Vcsrepo['/build/leiningen'],
   }
 }
+
+class {'leiningen': }
