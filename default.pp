@@ -33,4 +33,16 @@ class leiningen {
   }
 }
 
-class {'leiningen': } -> class {'packer': }
+class image_build {
+  class {'packer': }
+
+  package {
+    'librarian':
+      provider => 'gem',
+      ensure   => present,
+      require  => Package['ruby-dev'];
+    'ruby-dev':;
+  }
+}
+
+class {'leiningen': } -> class {'image_build': }
