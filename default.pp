@@ -41,7 +41,7 @@ class image_build {
       provider => 'gem',
       ensure   => present,
       require  => Package['ruby-dev'];
-    'ruby-dev':;
+    ['ruby-dev', 'virtualbox']:;
   }
 }
 
