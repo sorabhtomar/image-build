@@ -36,7 +36,7 @@
   (map #(or (has-packages-json? %)
             (has-pip-requirements? %)
             (has-gemfile? %))
-       files))
+       (:files project)))
 
 (defn should-we-use-package-lists? [project]
   (and (not (or (has-default-pp? project)
