@@ -97,7 +97,7 @@
   (cond (should-we-use-packer? project) packer-builder
         (should-we-use-puppet? project) puppet-builder
         (should-we-use-package-lists? project) package-lists-builder
-        true (fn [ignored] println "no builder matched")))
+        :else (fn [ignored] println "no builder matched")))
 
 (defn build-it! [project]
   (let [builder (what-should-we-use? project)]
@@ -107,5 +107,4 @@
   "checks the filesystem for which thing we should use"
   [& [given-path]]
   (let [path (or given-path "/Users/ezekiel/code/zippy")]
-    (build-it! (project-from-directory path))
-    (await)))
+    (build-it! (project-from-directory path))))
