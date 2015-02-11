@@ -2,12 +2,13 @@
   (:require [me.raynes.conch.low-level :as sh]))
 
 (defn project-files [path]
-    (map #(.getAbsolutePath %)
+    (map #(.getCanonicalPath %)
          (file-seq (clojure.java.io/file path))))
 
 (defn project-from-directory [path]
-  {:files (project-files path)
-    :path path})
+  (let [absolute-path (-> path clojure.java.io/file .getCanonicalPath)]
+    {:files (project-files absolute-path)
+      :path absolute-path}))
 
 (defn has-file-named? [name project]
   (let [files (:files project)
