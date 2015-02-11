@@ -1,19 +1,21 @@
 {
   "variables": {
-    "home": "{{env `HOME`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_KEY`}}",
+    "aws_access_key": "{{env `AWS_ACCESS_KEY`}}",
     "git_sha": "{{env `PACKER_GIT_SHA`}}",
     "git_branch": "{{env `PACKER_GIT_BRANCH`}}",
     "service_name": "{{env `SERVICE_NAME`}}"
   },
   "builders": [
     {
-      "type": "virtualbox-ovf",
-      "source_path": "{{user `home`}}/.vagrant.d/boxes/udacity-VAGRANTSLASH-puppet-masterless/0.0.1/virtualbox/box.ovf",
-      "ssh_username": "vagrant",
-      "ssh_password": "vagrant",
-      "headless": true,
-      "ssh_wait_timeout": "30s",
-      "shutdown_command": "sudo shutdown -h now"
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "us-east-1",
+      "source_ami": "ami-e240f48a",
+      "instance_type": "m3.medium",
+      "ssh_username": "ubuntu",
+      "ami_name": "{{user `service_name`}}/{{user `git_branch`}}/{{timestamp}}/{{user `git_sha`}}"
     }
   ],
   "provisioners": [
