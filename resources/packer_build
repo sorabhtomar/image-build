@@ -32,6 +32,8 @@ function clean_up_tmp() {
     set +euo pipefail
     cp *.box $STARTING_DIR
     cd $STARTING_DIR
+    git reset --hard HEAD
+    git clean -ffxd
     rm -rf $TEMP_DIR
 }
 

@@ -9,26 +9,28 @@
   {:files (project-files path)
     :path path})
 
-(defn has-file-named? [name files]
-  ; the alternating group at the beginning of this regex is so we only match at the beginning of a
-  ; file name, which is either at the beginning of a new path component, or at a line beginning.
-  (some #(re-matches (re-pattern (str "^(.*/|)" name "$")) %) files))
+(defn has-file-named? [name project]
+  (let [files (:files project)
+        path  (:path project)]
+    ; the alternating group at the beginning of this regex is so we only match at the beginning of a
+    ; file name, which is either at the beginning of a new path component, or at a line beginning.
+    (some #(re-matches (re-pattern (str "^" path "/" name "$")) %) files)))
 
-(defn has-pip-requirements? [files]
-  (has-file-named? "requirements.txt" files))
+(defn has-pip-requirements? [project]
+  (has-file-named? "requirements.txt" project))
 
 ; do we want to only use the lock file? maybe best to do so?
-(defn has-gemfile? [files]
-  (has-file-named? "Gemfile" files))
+(defn has-gemfile? [project]
+  (has-file-named? "Gemfile" project))
 
-(defn has-packages-json? [files]
-  (has-file-named? "packages.json" files))
+(defn has-packages-json? [project]
+  (has-file-named? "packages.json" project))
 
-(defn has-default-json? [files]
-  (has-file-named? "default.json" files))
+(defn has-default-json? [project]
+  (has-file-named? "default.json" project))
 
-(defn has-default-pp? [files]
-  (has-file-named? "default.pp" files))
+(defn has-default-pp? [project]
+  (has-file-named? "default.pp" project))
 
 (defn has-package-list? [files]
   (map #(or (has-packages-json? %)
