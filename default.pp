@@ -9,13 +9,13 @@ class build_dir {
 class leiningen {
   include build_dir
 
-  package {'git': }
+  package {['git', 'openjdk-7-jdk']: }
 
   vcsrepo {'/build/leiningen':
     source => 'https://github.com/technomancy/leiningen.git',
     provider => 'git',
     revision => '2.5.1',
-    require  => Package['git'],
+    require  => Package['git', 'openjdk-7-jdk'],
   }
 
   file {'/usr/local/bin/lein':
