@@ -32,23 +32,23 @@
 (defn has-default-pp? [project]
   (has-file-named? "default.pp" project))
 
-(defn has-package-list? [files]
+(defn has-package-list? [project]
   (map #(or (has-packages-json? %)
             (has-pip-requirements? %)
             (has-gemfile? %))
        files))
 
-(defn should-we-use-package-lists? [files]
-  (and (not (or (has-default-pp? files)
-                (has-default-json? files)))
-       (has-package-list? files)))
+(defn should-we-use-package-lists? [project]
+  (and (not (or (has-default-pp? project)
+                (has-default-json? project)))
+       (has-package-list? project)))
 
-(defn should-we-use-puppet? [files]
-  (and (has-default-pp? files)
-       (not (has-default-json? files))))
+(defn should-we-use-puppet? [project]
+  (and (has-default-pp? project)
+       (not (has-default-json? project))))
 
-(defn should-we-use-packer? [files]
-  (and (has-default-json? files)))
+(defn should-we-use-packer? [project]
+  (and (has-default-json? project)))
 
 (defn resource [path]
   (when path
@@ -92,14 +92,14 @@
   (put-puppet-file-in-place project)
   (puppet-builder project))
 
-(defn what-should-we-use? [files]
-  (cond (should-we-use-packer? files) packer-builder
-        (should-we-use-puppet? files) puppet-builder
-        (should-we-use-package-lists? files) package-lists-builder
+(defn what-should-we-use? [project]
+  (cond (should-we-use-packer? project) packer-builder
+        (should-we-use-puppet? project) puppet-builder
+        (should-we-use-package-lists? project) package-lists-builder
         true (fn [ignored] println "no builder matched")))
 
 (defn build-it! [project]
-  (let [builder (what-should-we-use? (project-files (:path project)))]
+  (let [builder (what-should-we-use? project)]
     (builder project)))
 
 (defn -main
