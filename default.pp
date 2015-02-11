@@ -40,8 +40,8 @@ class image_build {
     'librarian-puppet':
       provider => 'gem',
       ensure   => present,
-      require  => Package['ruby-dev'];
-    'ruby-dev':;
+      require  => Package['ruby-dev', 'build-essential'];
+    ['ruby-dev', 'build-essential']:;
   }
 }
 
