@@ -33,7 +33,7 @@ function clean_up_tmp() {
     cp *.box $STARTING_DIR
     cd $STARTING_DIR
     git reset --hard HEAD
-    git clean -ffxd
+    git clean -f
     rm -rf $TEMP_DIR
 }
 
