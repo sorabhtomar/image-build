@@ -10,7 +10,9 @@ class leiningen {
   include build_dir
   include apt
 
-  package {['git', 'openjdk-7-jdk']: }
+  package {['git', 'openjdk-7-jdk']:
+    require => Class['apt'],
+  }
 
   vcsrepo {'/build/leiningen':
     source => 'https://github.com/technomancy/leiningen.git',
