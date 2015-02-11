@@ -53,7 +53,7 @@ if [ -e './Puppetfile' ]; then
         echo "Cowardly refusing to build project which uses librarian when librarian is not on the path."
         exit 1
     else
-        bundle install
+        [ -e './Gemfile' ] && bundle install
         librarian-puppet install
         echo "Fetched modules."
     fi
@@ -68,4 +68,3 @@ else
 fi
 
 PACKER_GIT_BRANCH=$GIT_BRANCH PACKER_GIT_SHA=$LOCAL_BRANCH_REF packer build $PACKER_FILE
-
