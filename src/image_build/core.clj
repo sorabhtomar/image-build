@@ -95,7 +95,8 @@
 (defn what-should-we-use? [files]
   (cond (should-we-use-packer? files) packer-builder
         (should-we-use-puppet? files) puppet-builder
-        (should-we-use-package-lists? files) package-lists-builder))
+        (should-we-use-package-lists? files) package-lists-builder)
+        true #(println "no builder matched"))
 
 (defn build-it! [project]
   (let [builder (what-should-we-use? (project-files (:path project)))]
