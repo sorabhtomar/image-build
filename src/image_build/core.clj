@@ -33,10 +33,11 @@
   (has-file-named? "default.pp" project))
 
 (defn has-package-list? [project]
-  (map #(or (has-packages-json? %)
-            (has-pip-requirements? %)
-            (has-gemfile? %))
-       (:files project)))
+  (every? (comp not nil?)
+    (map #(or (has-packages-json? %)
+              (has-pip-requirements? %)
+              (has-gemfile? %))
+         (:files project))))
 
 (defn should-we-use-package-lists? [project]
   (and (not (or (has-default-pp? project)
